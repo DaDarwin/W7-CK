@@ -12,3 +12,9 @@ export const AccountSchema = new Schema(
   { timestamps: true, toJSON: { virtuals: true } }
 )
 
+AccountSchema.virtual('boughtTickets', {
+  localField: '_id',
+  foreignField: 'accountId',
+  ref: 'Ticket',
+  count: true
+})

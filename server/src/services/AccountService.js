@@ -60,6 +60,7 @@ class AccountService {
     })
     account = await createAccountIfNeeded(account, user)
     await mergeSubsIfNeeded(account, user)
+    // account.populate
     return account
   }
 
