@@ -4,7 +4,7 @@ import { logger } from "../utils/Logger.js"
 
 class EventService{
     async getAllEvents() {
-        return await dbContext.Event.find().populate('ticketCount')
+        return await dbContext.Event.find().populate('ticketCount creator', 'name picture')
     }
     
     async getEventByID(id) {
@@ -13,7 +13,7 @@ class EventService{
             throw new BadRequest(`Invalid Id: ${id}`)
         }
         logger.log('Found by Id:', event)
-        await event.populate('ticketCount')
+        await event.populate('ticketCount creator', 'name picture')
         return event
     }
     

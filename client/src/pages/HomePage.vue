@@ -1,22 +1,64 @@
 <template>
-  <div class="home flex-grow-1 d-flex flex-column align-items-center justify-content-center">
-    <div class="home-card p-5 card align-items-center shadow rounded elevation-3">
-      <img src="https://bcw.blob.core.windows.net/public/img/8600856373152463" alt="CodeWorks Logo"
-        class="rounded-circle">
-      <h1 class="my-5 bg-dark text-white p-3 rounded text-center">
-        Vue 3 Starter
-      </h1>
+  <section class="container-fluid">
+
+    <EventForm/>
+
+    <div class="row m-1">
+      <button @click="filter = ''" class="btn btn-outline-secondary text-secondary col mx-1">All</button>
+      <button v-for="category in eventCatagories" @click="filter = category" class="btn btn-outline-secondary text-secondary col mx-1">{{ category }}</button>
     </div>
-  </div>
+
+    <div  v-if="events.length" class="row">
+      
+      <EventCard :eventTower="eventTower" class="col-3" v-for="eventTower in events"/>
+      
+    </div>
+    
+  </section>
 </template>
 
 <script>
+import { computed, onMounted, ref } from 'vue';
+import { eventService } from '../services/EventService';
+import EventCard from '../components/EventCard.vue';
+import EventForm from '../components/EventForm.vue';
+import Pop from '../utils/Pop';
+import { AppState } from '../AppState'
+import { logger } from '../utils/Logger';
 export default {
+
   setup() {
-    return {
-      
+    onMounted(() => {
+      getEvents()
+    })
+    const filter = ref('')
+
+    async function getEvents() {
+      try {
+        await eventService.getEvents()
+      }
+      catch (error) {
+        Pop.error(error)
+      }
     }
-  }
+    logger.log(filter.value)
+    return {
+      filter,
+      events: computed(()=> {
+
+        if(filter.value){
+          logger.log(filter.value, AppState.events.filter(a => a.type == filter.value))
+          return AppState.events.filter(eventTower => eventTower.type == filter.value)
+        } 
+        else {
+          logger.log(AppState.events)
+          return AppState.events
+        }
+      }),
+      eventCatagories: computed(()=> AppState.eventCatagories)
+    }
+  },
+  components:{EventCard, EventForm}
 }
 </script>
 
