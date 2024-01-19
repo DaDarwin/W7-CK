@@ -13,6 +13,13 @@ class TicketService{
         else throw new Error('Event Is Full')
     }
 
+    async deleteTicket(id){
+        await api.delete(`api/tickets/${id}`)
+        const index = AppState.tickets.findIndex(ticket => ticket.id == id)
+        AppState.tickets.splice(index, 1)
+        AppState.activeEvent.ticketCount --
+    }
+
 }
 
 export const ticketService = new TicketService()

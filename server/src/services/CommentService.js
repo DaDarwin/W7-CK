@@ -4,6 +4,11 @@ import { eventService } from "./EventService.js";
 
 class CommentService{
     async createComment(payload) {
+        const tickets = await dbContext.Ticket.find({accountId: payload.creatorId, eventId: payload.eventId})
+        if(tickets.length){
+            payload.isAttending = true
+            dbContext.Comment.updateMany({accountId: payload.creatorId, eventId: payload.eventId}, {isAttending: true})
+        }
         return (await dbContext.Comment.create(payload)).populate('creator', 'name picture')
     }
     async deleteComment(id, userId) {

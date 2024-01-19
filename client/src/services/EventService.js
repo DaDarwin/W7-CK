@@ -27,6 +27,7 @@ class EventService{
         const res = await api.get(`api/events/${id}`)
         const activeEvent = new Event(res.data)
         AppState.activeEvent = activeEvent
+        logger.log('Event:', activeEvent)
         return activeEvent
     }
 
@@ -34,13 +35,14 @@ class EventService{
         const res = await api.get(`api/events/${id}/tickets`)
         const tickets = res.data.map(pojo=> new Ticket(pojo))
         AppState.tickets = tickets
+        logger.log('Tickets:', tickets)
         return tickets
     }
 
     async getComments(id){
         const res = await api.get(`api/events/${id}/comments`)
         const comments = res.data.map(pojo=> new Comment(pojo))
-        logger.log(comments)
+        logger.log('Comments:', comments)
         AppState.comments = comments
     }
     async cancelEvent(id){

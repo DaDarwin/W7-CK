@@ -1,11 +1,14 @@
 <template>
-    <section class="row justify-content-center">
+    <section v-if="activeEvent.id" class="row justify-content-center">
 
         <img class="img-fluid col-12 cover-Img" :src="activeEvent.coverImg" alt="">
 
-        <span class="fs-2  text-center col-12" :class="{
-            'text-danger': activeEvent.isCanceled,
-            'text-secondary': !activeEvent.isCanceled
+        <span class="fs-2  text-center col-12" 
+
+            :class="{
+                'text-danger': activeEvent.isCanceled,
+                'text-primary': isAttending && !activeEvent.isCanceled,
+                'text-secondary': !activeEvent.isCanceled && !isAttending
         }"> {{ activeEvent.name }}
 
             <i class="fs-5">
@@ -24,11 +27,11 @@
 
     </section>
 
-    <section class="row">
+    <section class="row p-2">
 
-        <form @submit="createTicket()" class="col-6">
+        <form @submit.prevent="createComment()" class="col-6">
             <label for="comment">Comment</label>
-            <textarea v-model="commentData.body" name="comment" id="comment" cols="5" rows="10" class="form-control"></textarea>
+            <textarea v-model="commentData.body" name="comment" id="comment" rows="3" class="form-control"></textarea>
             <button>Comment</button>
         </form>
 
@@ -41,14 +44,30 @@
 
                     <ProfileIcon :profile="remark.creator" class="m-1"/>
 
+                    <button @click="deleteComment(remark.id)" v-if="remark.creatorId == account.id">Delete Comment</button>
+
                 </div>
 
             </div>
+
         </div>
 
-        <div v-if="tickets.length" v-for="ticket in tickets" class="col-2 m-1">
+        <div v-if="tickets.length" class="col-6">
 
-            <ProfileIcon :profile="ticket.profile" class="m-1" />
+            <div class="row">
+
+                <span class="fs-3 text-secondary text-center">Attendees</span>
+
+                
+                <div v-if="tickets.length" v-for="ticket in tickets" class="col-2 p-1">
+                    
+                    <ProfileIcon :profile="ticket.profile"/>
+                    
+                    <button @click="deleteTicket(ticket.id)" v-if="ticket.accountId == account.id">Delete Ticket</button>
+                    
+                </div>
+            
+            </div>
 
         </div>
 
@@ -81,8 +100,8 @@ import { commentService } from '../services/CommentService';
 export default {
     setup() {
         const route = useRoute();
-        const commentData = ref({})
-        logger.log(route);
+        const commentData = ref({eventId: route.params.id})
+        // logger.log(route);
         watchEffect(() => {
             route.params.id;
             getEventById();
@@ -91,7 +110,6 @@ export default {
         async function getEventById() {
             try {
                 const activeEventData = await eventService.getEventById(route.params.id);
-                logger.log(activeEventData)
                 if (activeEventData.ticketCount) {
                     getEventTickets();
                 }
@@ -108,9 +126,19 @@ export default {
                 Pop.error(error);
             }
         }
+
+        async function deleteTicket(id){
+            try {
+                await ticketService.deleteTicket(id)    
+            } 
+            catch (error) {
+                Pop.error(error)
+            }
+        }
+
         async function getEventTickets() {
             try {
-                tickets = await eventService.getTickets(route.params.id);
+                await eventService.getTickets(route.params.id);
             }
             catch (error) {
                 Pop.error(error);
@@ -128,7 +156,21 @@ export default {
         }
 
         async function createComment(){
+            try {
+                await commentService.createComment(commentData.value)    
+            } 
+            catch (error) {
+                Pop.error(error)
+            }
+        }
 
+        async function deleteComment(id){
+            try {
+                await commentService.deleteComment(id)    
+            } 
+            catch (error) {
+                Pop.error(error)
+            }
         }
 
         async function cancelEvent() {
@@ -144,8 +186,12 @@ export default {
             account: computed(() => AppState.account),
             tickets: computed(() => AppState.tickets),
             comments: computed(() => AppState.comments),
+            isAttending: computed(()=> Boolean(AppState.tickets.findIndex(ticket => ticket.accountId == AppState.account.id))),
             commentData,
             createTicket,
+            deleteTicket,
+            createComment,
+            deleteComment,
             cancelEvent,
         };
     },
