@@ -11,6 +11,7 @@
     </span>
     
       <EventCard class="col-6" :eventTower="eventTower" v-for="eventTower in accountEvents"/>
+      
   </section>
 </template>
 

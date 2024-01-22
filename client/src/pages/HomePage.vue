@@ -10,7 +10,7 @@
 
     <div  v-if="events.length" class="row">
       
-      <EventCard :eventTower="eventTower" class="col-3" v-for="eventTower in events"/>
+      <EventCard :eventTower="eventTower" class="col-md-3 col-12"  v-for="eventTower in events"/>
       
     </div>
     

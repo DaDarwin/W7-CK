@@ -185,7 +185,7 @@ export default {
             account: computed(() => AppState.account),
             tickets: computed(() => AppState.tickets),
             comments: computed(() => AppState.comments),
-            isAttending: computed(()=> Boolean(AppState.tickets.findIndex(ticket => ticket.accountId == AppState.account.id))),
+            isAttending: computed(()=> AppState.tickets.filter(ticket => ticket.accountId == AppState.account.id)[0]),
             commentData,
             createTicket,
             deleteTicket,
