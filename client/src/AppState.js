@@ -11,6 +11,9 @@ export const AppState = reactive({
   account: {},
 
   /**@type {Event[]} */
+  accountEvents: [],
+
+  /**@type {Event[]} */
   events: [],
 
   /**@type {Event[]} */

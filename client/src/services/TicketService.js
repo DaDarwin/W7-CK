@@ -5,7 +5,7 @@ import { api } from "./AxiosService"
 class TicketService{
 
     async createTicket(id){
-        if(activeEvent.ticketCount < activeEvent.capacity){
+        if(AppState.activeEvent.ticketCount < AppState.activeEvent.capacity){
             const res = await api.post('api/tickets', {eventId: id})
             const ticket = new Ticket(res.data)
             AppState.tickets.push(ticket)

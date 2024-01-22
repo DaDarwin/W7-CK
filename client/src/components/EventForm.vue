@@ -7,12 +7,12 @@
 
             <div class="col-6">
                 <label for="event-name">Name</label>
-                <input v-model="eventData.name" type="text" id="event-name" name="event-name" class="form-control">
+                <input v-model="eventData.name" required type="text" id="event-name" name="event-name" class="form-control">
             </div>
 
             <div class="col-6">
                 <label for="event-type">Type</label>
-                <select v-model="eventData.type" type="date" id="event-type" name="event-type" class="form-control">
+                <select v-model="eventData.type" required type="date" id="event-type" name="event-type" class="form-control">
                     <option selected disabled value="">Select A Type</option>
                     <option v-for="type in types" :value="type"> {{ type }} </option>
                 </select>
@@ -20,27 +20,27 @@
             
             <div>
                 <label for="event-description">Description</label>
-                <textarea v-model="eventData.description" id="event-description" name="event-description" class="form-control" cols="10" rows="10"></textarea>
+                <textarea v-model="eventData.description" required id="event-description" name="event-description" class="form-control" cols="10" rows="10"></textarea>
             </div>
 
             <div class="col-4">
                 <label for="event-location">Location</label>
-                <input v-model="eventData.location" type="text" id="event-location" name="event-location" class="form-control">
+                <input v-model="eventData.location" required type="text" id="event-location" name="event-location" class="form-control">
             </div>
 
             <div class="col-4">
                 <label for="event-startDate">Start Date</label>
-                <input v-model="eventData.startDate" type="date" id="event-startDate" name="event-startDate" class="form-control">
+                <input v-model="eventData.startDate" required type="date" id="event-startDate" name="event-startDate" class="form-control">
             </div>
 
             <div class="col-4">
                 <label for="event-capacity">Capacity</label>
-                <input v-model="eventData.capacity" type="number" id="event-capacity" name="event-capacity" class="form-control">
+                <input v-model="eventData.capacity" required type="number" id="event-capacity" name="event-capacity" class="form-control">
             </div>
 
             <div class="col-8">
                 <label for="event-coverImg">Cover Image</label>
-                <input v-model="eventData.coverImg" type="url" id="event-coverImg" name="event-coverImg" class="form-control">
+                <input v-model="eventData.coverImg" required type="url" id="event-coverImg" name="event-coverImg" class="form-control">
             </div>
 
             <div class="col-4 d-flex justify-content-end align-items-end">

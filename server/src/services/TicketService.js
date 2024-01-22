@@ -27,7 +27,7 @@ class TicketService{
             // @ts-ignore
             throw new BadRequest(`User ${user.name} has ${account.boughtTickets} Tickets`)
         }
-        const tickets = await dbContext.Ticket.find({accountId: user.id}).populate('event')
+        const tickets = await dbContext.Ticket.find({accountId: user.id}).populate('event profile')
         logger.log(tickets)
         return tickets
     }

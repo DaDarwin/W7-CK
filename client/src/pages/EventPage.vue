@@ -3,17 +3,16 @@
 
         <img class="img-fluid col-12 cover-Img" :src="activeEvent.coverImg" alt="">
 
-        <span class="fs-2  text-center col-12" 
-
-            :class="{
-                'text-danger': activeEvent.isCanceled,
-                'text-primary': isAttending && !activeEvent.isCanceled,
-                'text-secondary': !activeEvent.isCanceled && !isAttending
-        }"> {{ activeEvent.name }}
+        <span class="fs-2  text-center col-12 text-secondary"> 
+            
+            {{ activeEvent.name }}
 
             <i class="fs-5">
                 ({{ activeEvent.type }})
             </i>
+            <i class="text-danger fs-5" v-if="activeEvent.isCanceled">(Event Canceled)</i>
+            <i class="text-primary fs-5" v-if="isAttending && !activeEvent.isCanceled"> (Attending Event)</i>
+            <i class="text-danger p-1 fs-5" v-if="activeEvent.ticketCount >= activeEvent.capacity">(Sold Out)</i>
 
         </span>
 
@@ -31,7 +30,7 @@
 
         <form @submit.prevent="createComment()" class="col-6">
             <label for="comment">Comment</label>
-            <textarea v-model="commentData.body" name="comment" id="comment" rows="3" class="form-control"></textarea>
+            <textarea v-model="commentData.body" name="comment" id="comment" rows="3" class="form-control my-1"></textarea>
             <button>Comment</button>
         </form>
 
@@ -44,7 +43,7 @@
 
                     <ProfileIcon :profile="remark.creator" class="m-1"/>
 
-                    <button @click="deleteComment(remark.id)" v-if="remark.creatorId == account.id">Delete Comment</button>
+                    <button @click="deleteComment(remark.id)" v-if="remark.creatorId == account.id" class="p-1">Delete Comment</button>
 
                 </div>
 
@@ -61,7 +60,7 @@
                 
                 <div v-if="tickets.length" v-for="ticket in tickets" class="col-2 p-1">
                     
-                    <ProfileIcon :profile="ticket.profile"/>
+                    <ProfileIcon :profile="ticket.profile" class="m-1"/>
                     
                     <button @click="deleteTicket(ticket.id)" v-if="ticket.accountId == account.id">Delete Ticket</button>
                     
@@ -75,7 +74,7 @@
 
     <section v-if="account.id && activeEvent.ticketCount < activeEvent.capacity && !activeEvent.isCanceled" class="p-1">
 
-        <button @click="createTicket()">Get Ticket</button>
+        <button @click="createTicket(activeEvent.id)">Get Ticket</button>
 
     </section>
 
@@ -93,9 +92,9 @@ import { AppState } from '../AppState';
 import { computed, watchEffect, ref } from 'vue';
 import { logger } from '../utils/Logger';
 import Pop from '../utils/Pop';
+import ProfileIcon from '../components/ProfileIcon.vue';
 import { eventService } from '../services/EventService.js'
 import { ticketService } from '../services/TicketService';
-import ProfileIcon from '../components/ProfileIcon.vue';
 import { commentService } from '../services/CommentService';
 export default {
     setup() {

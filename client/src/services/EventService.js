@@ -51,6 +51,18 @@ class EventService{
         AppState.activeEvent = new Event(res.data)
 
     }
+
+    async getAccountTickets(){
+        const res = await api.get('account/tickets')
+        logger.log(res)
+        const events = res.data.map(pojo => {
+            let thing = pojo.event
+            thing.creator = pojo.profile
+            return new Event(thing)
+        })
+        logger.log(events)
+        AppState.accountEvents = events
+    }
 }
 
 export const eventService = new EventService()
